@@ -24,7 +24,7 @@ var transporter = nodemailer.createTransport({
  });
 
  const mailOptions = {
-  from: process.env.mail_password, // sender address
+  from: process.env.email, // sender address
   to: '', // list of receivers
   subject: 'Password reset', // Subject line
   html: ''// plain text body
