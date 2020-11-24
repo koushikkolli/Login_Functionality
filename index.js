@@ -38,8 +38,6 @@ let sampleMail = '<p>Hi, </p>'
 
 app.put("/reset-password", async(req, res)=>{
   try{
-    console.log(process.env.email)
-    console.log(process.env.mail_password)
     let client = await mongodb.connect(url);
     let db = client.db("email_db");
     let data = await db.collection("users").findOne({ email: req.body.email });
@@ -48,7 +46,7 @@ app.put("/reset-password", async(req, res)=>{
     if (data) {
       let randomStringData = {randomString : salt}
       await db.collection("users").findOneAndUpdate({email: req.body.email}, {$set :randomStringData})
-      console.log("after")
+      console.log(req.body.email)
       mailOptions.to = req.body.email
       let resetURL = process.env.resetURL
       resetURL = resetURL+"?id="+data._id+"&rs="+salt
@@ -164,7 +162,6 @@ app.post("/register", async (req, res) => {
       }
       client.close();
     } catch (error) {
-      console.log(error)
       res.status(500).json({
           message: "Internl Server Error"
       });
