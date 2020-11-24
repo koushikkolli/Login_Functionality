@@ -38,6 +38,8 @@ let sampleMail = '<p>Hi, </p>'
 
 app.put("/reset-password", async(req, res)=>{
   try{
+    console.log(process.env.email)
+    console.log(process.env.mail_password)
     let client = await mongodb.connect(url);
     let db = client.db("email_db");
     let data = await db.collection("users").findOne({ email: req.body.email });
