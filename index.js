@@ -42,9 +42,11 @@ app.put("/reset-password", async(req, res)=>{
     let db = client.db("email_db");
     let data = await db.collection("users").findOne({ email: req.body.email });
     let salt = await bcrypt.genSalt(8);
+    console.log(data)
     if (data) {
       let randomStringData = {randomString : salt}
       await db.collection("users").findOneAndUpdate({email: req.body.email}, {$set :randomStringData})
+      console.log("after")
       mailOptions.to = req.body.email
       let resetURL = process.env.resetURL
       resetURL = resetURL+"?id="+data._id+"&rs="+salt
@@ -52,6 +54,7 @@ app.put("/reset-password", async(req, res)=>{
       resultMail = resultMail.replace("urlToBeReplaced", resetURL)
       resultMail = resultMail.replace("urlToBeReplaced", resetURL)
       mailOptions.html = resultMail
+      console.log(mailOptions)
       await transporter.sendMail(mailOptions)
       res.status(200).json({
         message: "Verification mail sent"
@@ -64,6 +67,7 @@ app.put("/reset-password", async(req, res)=>{
     client.close();
   }
   catch(error){
+    console.log(error)
     res.status(500).json({
         message: "Internal Server Error"
     })
